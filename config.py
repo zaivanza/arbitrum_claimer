@@ -39,11 +39,6 @@ GAS_PRICE         = 100000000 * 100 # = 10 gwei сейчас
 ATTEMPTS          = 5 # кол-во попыток отправить транзу (клейм / трансфер)
 
 
-# для тестов
-# ARB_CONTRACT     = '0x70a7387CcE324fB9eB71B823aa11A009d55708ca' # test
-# CLAIMER_CONTRACT = '0x1f5f0a49aF284e852dD7D93D28C492CF6Da56A37' # test
-
-
 outfile = ''
 
 with open(f"{outfile}erc20.json", "r") as file:
