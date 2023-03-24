@@ -31,5 +31,4 @@ ATTEMPTS - это кол-во попыток, то есть сколько ра�
 
 -----
 
-created by [ ноу гем ].
-channel : https://t.me/hodlmodeth. [ code ] chat : https://t.me/code_hodlmodeth.
+created by [ ноу гем ]. channel : https://t.me/hodlmodeth. [ code ] chat : https://t.me/code_hodlmodeth.
