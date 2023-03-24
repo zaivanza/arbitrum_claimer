@@ -87,51 +87,50 @@ async def checkStatusTx(web3, tx_hash):
 # клеймим
 async def claimer(web3, privatekey):
 
-        try:
-                
-            contract = web3.eth.contract(
-                address=Web3.to_checksum_address(CLAIMER_CONTRACT), abi=CLAIMER_ABI
-            )
-            account = web3.eth.account.from_key(privatekey)
-            address = account.address
+    try:
 
-            retry = 0
+        contract = web3.eth.contract(
+            address=Web3.to_checksum_address(CLAIMER_CONTRACT), abi=CLAIMER_ABI
+        )
+        account = web3.eth.account.from_key(privatekey)
+        address = account.address
 
-            while True:
+        retry = 0
 
-                if retry != ATTEMPTS:
+        while True:
 
-                    nonce = await web3.eth.get_transaction_count(address)
-                    # gasLimit = await asyncio.to_thread(lambda: 1000000)  # нужно заменить
-                    gasLimit = random.randint(GAS_LIMIT_MIN, GAS_LIMIT_MAX) 
+            if retry != ATTEMPTS:
 
-                    contract_txn = await contract.functions.claim().build_transaction(
-                        {
-                            "from": address,
-                            "gas": gasLimit,
-                            "gasPrice": GAS_PRICE,
-                            "nonce": nonce,
-                        }
-                    )
+                nonce = await web3.eth.get_transaction_count(address)
+                gasLimit = random.randint(GAS_LIMIT_MIN, GAS_LIMIT_MAX) 
 
-                    signed_txn = web3.eth.account.sign_transaction(
-                        contract_txn, private_key=privatekey
-                    )
-                    tx_hash = await web3.eth.send_raw_transaction(signed_txn.rawTransaction)
-                    hash_ = web3.to_hex(tx_hash)
-                    status_tx = await checkStatusTx(web3, hash_)
+                contract_txn = await contract.functions.claim().build_transaction(
+                    {
+                        "from": address,
+                        "gas": gasLimit,
+                        "gasPrice": GAS_PRICE,
+                        "nonce": nonce,
+                    }
+                )
 
-                    # нужно поменять на 1 , пока что 0 чтобы не слать бесконечно транзы
-                    if status_tx == 1:
-                        cprint(f"\n>>> claim : https://arbiscan.io/tx/{hash_}", "green")
-                        break
-                    else: 
-                        cprint(f"\n>>> not claim, try again : {address}", "yellow")
-                        time.sleep(0.5)
+                signed_txn = web3.eth.account.sign_transaction(
+                    contract_txn, private_key=privatekey
+                )
+                tx_hash = await web3.eth.send_raw_transaction(signed_txn.rawTransaction)
+                hash_ = web3.to_hex(tx_hash)
+                status_tx = await checkStatusTx(web3, hash_)
 
-                    retry += 1
+                # нужно поменять на 1 , пока что 0 чтобы не слать бесконечно транзы
+                if status_tx == 1:
+                    cprint(f"\n>>> claim : https://arbiscan.io/tx/{hash_}", "green")
+                    break
+                else: 
+                    cprint(f"\n>>> not claim, try again : {address}", "yellow")
+                    time.sleep(0.5)
 
-                else : break
+                retry += 1
+
+            else : break
 
         except Exception as error:
 
@@ -202,7 +201,6 @@ async def transfer_eth(web3, privatekey, amount_to_transfer, to_address):
 
         while True:
             nonce = await web3.eth.get_transaction_count(address)
-            # gasLimit = await asyncio.to_thread(lambda: 500000)
             gasLimit = random.randint(GAS_LIMIT_MIN, GAS_LIMIT_MAX) 
 
             contract_txn = {
@@ -257,7 +255,7 @@ async def main():
 
 if __name__ == "__main__":
 
-    # Инициализируем состояние (чекаем балансы кошелей)
+    # Инициализируем состояние (чекаем балансы кошельков)
     wallets = getInitializedData()
     print("Initialization completed successfully")
 
